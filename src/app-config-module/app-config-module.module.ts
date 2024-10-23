@@ -8,4 +8,4 @@ import { ConfigModule } from '@nestjs/config';
         })
     ]
 })
-export class AppConfigModuleModule {}
+export class AppConfigModule {}
