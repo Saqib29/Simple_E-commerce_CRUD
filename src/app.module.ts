@@ -10,6 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AppResolver } from './app.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { join } from 'path';
     }),
     UserModule, 
     ProductModule, 
-    OrderModule
+    OrderModule, 
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
