@@ -23,8 +23,17 @@ type User {
   orders: [Order!]
 }
 
+type AuthPayload {
+  access_token: String!
+}
+
 type Query {
   hello: String!
   users: [User!]!
   user(id: ID!): User!
+}
+
+type Mutation {
+  singin(email: String!, password: String!): String!
+  signup(email: String!, password: String!): AuthPayload!
 }
