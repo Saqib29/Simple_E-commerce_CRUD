@@ -7,13 +7,16 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
+    command: npm run start:dev
     ports:
       - '8181:8181'
     environment:
-      - PORT=8181
+      - NODE_ENV=development
+    env_file:
+      - ./.env
     volumes:
       - .:/usr/src/app
-    restart: unless-stopped
     depends_on:
       - db
 
