@@ -31,9 +31,14 @@ type Query {
   hello: String!
   users: [User!]!
   user(id: ID!): User!
+  products(page: Int! = 1, limit: Int! = 10): [Product!]!
+  product(id: ID!): Product!
 }
 
 type Mutation {
+  createProduct(name: String!, category: String!, price: Float!): Product!
+  updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
+  deleteProduct(id: ID!): Boolean!
   singin(email: String!, password: String!): String!
   signup(email: String!, password: String!): AuthPayload!
 }
