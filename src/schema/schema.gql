@@ -9,18 +9,18 @@ type Product {
   price: Float!
 }
 
-type User {
-  id: ID!
-  email: String!
-  orders: [Order!]
-}
-
 type Order {
   id: ID!
   user: User!
   product: Product!
   quantity: Float!
   status: String!
+}
+
+type User {
+  id: ID!
+  email: String!
+  orders: [Order!]
 }
 
 type Query {
