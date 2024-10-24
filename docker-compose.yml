@@ -1,19 +1,37 @@
 version: '3.8'
 
 services:
+  app:
+    container_name: app
+    image: backend
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8181:8181'
+    environment:
+      - PORT=8181
+    volumes:
+      - .:/usr/src/app
+    restart: unless-stopped
+    depends_on:
+      - db
+
   db:
+    container_name: db
     image: postgres:16
     restart: always
     environment:
       - POSTGRES_USER=saqib
       - POSTGRES_PASSWORD=password
-      - POSTGRE_DB=ecommers
+      - POSTGRES_DB=ecommers
     ports:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   pgadmin:
+    container_name: pgAdmin
     image: dpage/pgadmin4
     restart: always
     environment:
