@@ -44,7 +44,7 @@ type Query {
   user(id: ID!): User!
   products(page: Int! = 1, limit: Int! = 10): [Product!]!
   product(id: ID!): Product!
-  userOrders(userId: ID!): [Order!]!
+  userOrders: [Order!]!
   totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
   topUsers: [TopUserDto!]!
 }

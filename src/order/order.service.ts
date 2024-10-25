@@ -44,7 +44,7 @@ export class OrderService {
     async findByUser(userId: string): Promise<Order[]> {
         return this.orderRepository.find({
           where: { user: { id: userId } },
-          relations: ['product'],
+          relations: ['product', 'user'],
         });
     }
 

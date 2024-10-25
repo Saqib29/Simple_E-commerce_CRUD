@@ -29,8 +29,8 @@ export class OrderResolver {
 
     @Query(() => [Order])
     @UseGuards(GqlAuthGuard)
-    async userOrders(@Args('userId', { type: () => ID }) userId: string): Promise<Order[]> {
-        return this.orderService.findByUser(userId);
+    async userOrders(@CurrentUser() user: CurrentUserPayload): Promise<Order[]> {
+        return this.orderService.findByUser(user.userId);
     }
 
     @Query(() => [TotalSalesPerCategoryDto])
