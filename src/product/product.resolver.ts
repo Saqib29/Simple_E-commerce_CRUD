@@ -9,8 +9,6 @@ export class ProductResolver {
     constructor(private productService: ProductService) {}
 
     @Query(() => [Product])
-    @UseGuards(GqlAuthGuard)
-
     async products(
         @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
         @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,  

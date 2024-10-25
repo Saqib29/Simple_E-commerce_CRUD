@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { ORDER_STATUS } from 'src/utils/common/constant';
+import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
 
 @Injectable()
 export class OrderService {
@@ -33,7 +34,7 @@ export class OrderService {
         });
     }
 
-    async getTotalSalesPerCategory(): Promise<any[]> {
+    async getTotalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
         return this.orderRepository
           .createQueryBuilder('order')
           .leftJoinAndSelect('order.product', 'product')
@@ -43,7 +44,7 @@ export class OrderService {
           .getRawMany();
     }
 
-    async getTopUsers(): Promise<any[]> {
+    async getTopUsers(): Promise<TopUserDto[]> {
         return this.orderRepository
           .createQueryBuilder('order')
           .leftJoinAndSelect('order.user', 'user')
