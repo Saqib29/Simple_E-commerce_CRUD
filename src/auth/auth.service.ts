@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,7 @@ import { JWT_OPTIONS } from 'src/utils/common/jwt.option';
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
     constructor(
         private userService: UserService,
         private jwtService: JwtService
@@ -27,8 +28,9 @@ export class AuthService {
         const token = this.jwtService.sign(payload);
 
         res.cookie('jwt', token, JWT_OPTIONS)
-
-        return { access_token: token };
+        this.logger.debug('cookie set successfully');
+        
+        return { access_token: token }; 
     }
 
     async signUp(email: string, password: string, res: Response): Promise<AuthPayload> {

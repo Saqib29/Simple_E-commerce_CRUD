@@ -11,21 +11,21 @@ export class AuthResolver {
     async signin(
         @Args('email') email: string,
         @Args('password') password: string,
-        @Context('res') res: Response
+        @Context() context: { res: Response }
     ): Promise<AuthPayload> {
         const user = await this.authService.validateUser(email, password);
         if (!user) {
             throw new Error('Invalid credentials')
         }
-        return this.authService.signIn(user, res);
+        return this.authService.signIn(user, context.res);
     }
 
     @Mutation(() => AuthPayload)
     async signup(
         @Args('email') email: string,
         @Args('password') password: string,
-        @Context('res') res: Response 
+        @Context() context: { res: Response } 
     ): Promise<AuthPayload> {
-        return this.authService.signUp(email, password, res);
+        return this.authService.signUp(email, password, context.res);
     }
 }
