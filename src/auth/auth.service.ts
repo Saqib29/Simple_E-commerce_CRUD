@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { AuthPayload } from 'src/utils/types/auth-payload';
+import { Response } from 'express';
+import { JWT_OPTIONS } from 'src/utils/common/jwt.option';
 
 @Injectable()
 export class AuthService {
@@ -20,17 +22,19 @@ export class AuthService {
         return null;
     }
 
-    async signIn(user: any): Promise<AuthPayload> {
+    async signIn(user: any, res: Response): Promise<AuthPayload> {
         const payload = { email: user.email, sub: user.id };
-        return {
-            access_token: this.jwtService.sign(payload)
-        };
+        const token = this.jwtService.sign(payload);
+
+        res.cookie('jwt', token, JWT_OPTIONS)
+
+        return { access_token: token };
     }
 
-    async signUp(email: string, password: string): Promise<AuthPayload> {
+    async signUp(email: string, password: string, res: Response): Promise<AuthPayload> {
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT));
         const user = await this.userService.create(email, hashedPassword);
 
-        return this.signIn(user);
+        return this.signIn(user, res);
     }
 }
