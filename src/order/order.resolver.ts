@@ -4,6 +4,8 @@ import { OrderService } from './order.service';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
+import { CurrentUser } from 'src/utils/decorator/current-user.decorator';
+import { CurrentUserPayload } from 'src/utils/interface/currentUser.interface';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -12,11 +14,11 @@ export class OrderResolver {
     @Mutation(() => Order)
     @UseGuards(GqlAuthGuard)
     async createOrder(
-    @Args('userId', { type: () => ID }) userId: string,
+    @CurrentUser() user: CurrentUserPayload,
     @Args('productId', { type: () => ID }) productId: string,
     @Args('quantity') quantity: number,
     ): Promise<Order> {
-        return this.orderService.create(userId, productId, quantity);
+        return this.orderService.create(user.userId, productId, quantity);
     }
 
     @Mutation(() => Order)
