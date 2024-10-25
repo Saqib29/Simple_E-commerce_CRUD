@@ -53,7 +53,7 @@ type Mutation {
   createProduct(name: String!, category: String!, price: Float!): Product!
   updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
   deleteProduct(id: ID!): Boolean!
-  createOrder(userId: ID!, productId: ID!, quantity: Float!): Order!
+  createOrder(productId: ID!, quantity: Float!): Order!
   cancelOrder(id: ID!): Order!
   signin(email: String!, password: String!): AuthPayload!
   signup(email: String!, password: String!): AuthPayload!
