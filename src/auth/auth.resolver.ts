@@ -6,11 +6,11 @@ import { AuthPayload } from 'src/utils/types/auth-payload';
 export class AuthResolver {
     constructor(private authService: AuthService){}
 
-    @Mutation(() => String)
-    async singin(
+    @Mutation(() => AuthPayload)
+    async signin(
         @Args('email') email: string,
         @Args('password') password: string,
-    ) {
+    ): Promise<AuthPayload> {
         const user = await this.authService.validateUser(email, password);
         if (!user) {
             throw new Error('Invalid credentials')

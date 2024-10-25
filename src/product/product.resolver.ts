@@ -2,7 +2,7 @@ import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Product } from './product.entity';
 import { ProductService } from './product.service';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/utils/jwt/jwt-auth.guards';
+import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -22,7 +22,7 @@ export class ProductResolver {
     }
 
     @Mutation(() => Product)
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(GqlAuthGuard)
     async createProduct(
       @Args('name') name: string,
       @Args('category') category: string,
@@ -32,7 +32,7 @@ export class ProductResolver {
     }
 
     @Mutation(() => Product)
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(GqlAuthGuard)
     async updateProduct(
     @Args('id', { type: () => ID }) id: string,
     @Args('name') name: string,
@@ -43,7 +43,7 @@ export class ProductResolver {
     }
 
     @Mutation(() => Boolean)
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(GqlAuthGuard)
     async deleteProduct(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
         return this.productService.remove(id);
     }

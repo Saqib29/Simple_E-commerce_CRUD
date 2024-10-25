@@ -39,6 +39,6 @@ type Mutation {
   createProduct(name: String!, category: String!, price: Float!): Product!
   updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
   deleteProduct(id: ID!): Boolean!
-  singin(email: String!, password: String!): String!
+  signin(email: String!, password: String!): AuthPayload!
   signup(email: String!, password: String!): AuthPayload!
 }
