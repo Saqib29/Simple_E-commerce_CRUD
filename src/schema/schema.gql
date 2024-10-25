@@ -29,7 +29,7 @@ type TotalSalesPerCategoryDto {
 }
 
 type TopUserDto {
-  userId: Int!
+  userId: String!
   userEmail: String!
   orderCount: Int!
 }

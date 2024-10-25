@@ -11,7 +11,7 @@ export class TotalSalesPerCategoryDto {
 
 @ObjectType()
 export class TopUserDto {
-  @Field(() => Int)
+  @Field(() => String)
   userId: number;
 
   @Field()

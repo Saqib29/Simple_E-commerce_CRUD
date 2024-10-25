@@ -66,7 +66,7 @@ export class OrderService {
           .addSelect('user.email', 'userEmail')
           .addSelect('COUNT(order.id)', 'orderCount')
           .groupBy('user.id')
-          .orderBy('orderCount', 'DESC')
+          .orderBy('COUNT(order.id)', 'DESC')
           .limit(10)
           .getRawMany();
     }
