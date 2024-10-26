@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Order } from "src/order/order.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 @ObjectType()
@@ -10,6 +10,7 @@ export class User {
     id: string;
 
     @Column({ unique: true })
+    @Index()
     @Field()
     email: string;
 

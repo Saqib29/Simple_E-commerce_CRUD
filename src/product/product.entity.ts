@@ -1,6 +1,6 @@
 import { Field, Float, ID, ObjectType } from "@nestjs/graphql";
 import { Order } from "src/order/order.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 @ObjectType()
@@ -14,6 +14,7 @@ export class Product {
     name: string;
 
     @Column()
+    @Index()
     @Field()
     category: string;
 

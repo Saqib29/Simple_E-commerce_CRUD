@@ -23,6 +23,38 @@ type User {
   orders: [Order!]
 }
 
+type TotalSalesPerCategoryDto {
+  category: String!
+  totalSales: Float!
+}
+
+type TopUserDto {
+  userId: String!
+  userEmail: String!
+  orderCount: Int!
+}
+
+type AuthPayload {
+  access_token: String!
+}
+
 type Query {
   hello: String!
+  users: [User!]!
+  user(id: ID!): User!
+  products(page: Int! = 1, limit: Int! = 10): [Product!]!
+  product(id: ID!): Product!
+  userOrders: [Order!]!
+  totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
+  topUsers: [TopUserDto!]!
+}
+
+type Mutation {
+  createProduct(name: String!, category: String!, price: Float!): Product!
+  updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
+  deleteProduct(id: ID!): Boolean!
+  createOrder(productId: ID!, quantity: Float!): Order!
+  cancelOrder(id: ID!): Order!
+  signin(email: String!, password: String!): AuthPayload!
+  signup(email: String!, password: String!): AuthPayload!
 }

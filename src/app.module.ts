@@ -10,14 +10,21 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AppResolver } from './app.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
     AppConfigModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: true,
       autoSchemaFile: join(process.cwd(), 'src/schema/schema.gql'),
+      context: ({ req, res }) => ({ req, res }),
+      playground: {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -31,7 +38,9 @@ import { join } from 'path';
     }),
     UserModule, 
     ProductModule, 
-    OrderModule
+    OrderModule, 
+    AuthModule,
+    SeederModule
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
