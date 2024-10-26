@@ -16,11 +16,25 @@ A robust e-commerce API built with NestJS, GraphQL, and PostgreSQL, featuring JW
   - Pagination
   - TypeORM integration for database interactions
   - Implement seeder to save 1000 data to each table
+  - Used beach to save per 100 among total to avoid over load to db and clashes
+  - During seeder created another table to keep tract wether seed or not to avoid seed each time in application running. the seeder will run on the first run of the project.
+
+- **GraphQL Implementation**
+  - Query and Mutation
+  - Implement basic queries with pagination
+  - Code first approach
+  - Apollo server
 
 - **GraphQL Implementation**
   - Query and Mutation
   - Code first approach
   - Apollo server
+
+- **Docker**
+  - Implement Dockerfile and docker compose to run backend application and PostgresSQL.
+  - Add pgAdmin service to docker compose to interact with database from GUI.
+  - Add makefile to run simple command.
+  
 
 ## 🛠️ Tech Stack
 
@@ -53,18 +67,18 @@ yarn install
 
 3. Create a `.env` file in the root directory and provide these values:
 ```env
-PORT=
+PORT=8181
 NODE_ENV=
 ORIGIN=
 POSTGRES_HOST=db
 POSTGRES_PORT=5432
-POSTGRES_USERNAME=
-POSTGRES_PASSWORD=
-POSTGRES_DATABASE=
+POSTGRES_USERNAME=saqib
+POSTGRES_PASSWORD=password
+POSTGRES_DATABASE=ecommers
 RUN_SEED=true
-JWT_SECRET=
-JWT_EXP=
-BCRYPT_SALT=
+JWT_SECRET=secret
+JWT_EXP=1h
+BCRYPT_SALT=10
 ```
 
 4. Run docker commands:
@@ -75,7 +89,18 @@ $ sudo docker compose up --build --detach
 // to see the logs
 $ sudo docker compose logs --follow app 
 ```
-Now visit: `localhost:3000/graphql` to apollo playground.
+
+**If you have installed make, then you can ignore number 4, instead run the following commands.**
+
+>// To build and run <br>
+$ sudo make build
+
+>// To see logs <br>
+$ sudo make logs
+
+__To see more you can follow Makefile in the root directory.__
+
+Now visit: `localhost:8181/graphql` to apollo playground.
 
 ## 📚 Schemas
 
