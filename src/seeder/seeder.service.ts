@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/user.entity';
 import { Product } from 'src/product/product.entity';
 import { Order } from 'src/order/order.entity';
+import { app_config } from 'src/app-config-module/config';
 
 @Injectable()
 export class SeederService implements OnModuleInit {
@@ -25,7 +26,7 @@ export class SeederService implements OnModuleInit {
     await this.createSeederTableIfNotExists();
     const alreadySeeded = await this.isSeeded();
 
-    if (!alreadySeeded && process.env.RUN_SEED === 'true') {
+    if (!alreadySeeded && app_config.run_seed === 'true') {
       console.log('Running Seeder...');
       await this.seedUsers();
       await this.seedProducts();

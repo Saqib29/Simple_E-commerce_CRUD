@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { SeederModule } from './seeder/seeder.module';
+import { db_config } from './app-config-module/config';
 
 @Module({
   imports: [
@@ -28,11 +29,11 @@ import { SeederModule } from './seeder/seeder.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USERNAME,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
+      host: db_config.host,
+      port: db_config.port,
+      username: db_config.username,
+      password: db_config.password,
+      database: db_config.dbName,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),

@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthPayload } from 'src/utils/types/auth-payload';
 import { Response } from 'express';
 import { JWT_OPTIONS } from 'src/utils/common/jwt.option';
+import { jwt_config } from 'src/app-config-module/config';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
     }
 
     async signUp(email: string, password: string, res: Response): Promise<AuthPayload> {
-        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT));
+        const hashedPassword = await bcrypt.hash(password, parseInt(jwt_config.salt));
         const user = await this.userService.create(email, hashedPassword);
 
         return this.signIn(user, res);

@@ -1,6 +1,7 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { jwt_config } from "src/app-config-module/config";
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {
@@ -12,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
                 }
             ]),
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET,
+            secretOrKey: jwt_config.secret,
         });
     }
 
