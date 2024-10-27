@@ -9,6 +9,7 @@ A robust e-commerce API built with NestJS, GraphQL, and PostgreSQL, featuring JW
   - Secure user signup and signin
   - Passport integration for JWT strategy
   - Enable cors
+  - Tokenized authenticatioon
 
 - **Database Operations**
   - CRUD operations for products, users, and orders
@@ -49,8 +50,8 @@ A robust e-commerce API built with NestJS, GraphQL, and PostgreSQL, featuring JW
 
 ## 📋 version
 
-- Node.js (v18)
-- yarn
+- Node.js (v18.18.0)
+- yarn (v1.22.22)
 
 ## 🔧 Installation
 
@@ -64,6 +65,7 @@ cd gain_backend_task/
 ```bash
 yarn install
 ```
+** If yarn is not installed run this command: `$ npm install -g yarn`
 
 3. Create a `.env` file in the root directory and provide these values:
 ```env
