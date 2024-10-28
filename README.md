@@ -194,6 +194,22 @@ type Mutation {
    - Use of database transactions where needed
 
 
+## 🌟 What should be improved
+
+0. **Access controller**
+    - Should add role base access control
+    - Add user role
+
+1. **Error Handling**
+   - Should add proper error handler
+   - Add global error handler
+
+2. **Database**
+   - Should add `indexing` to improve fast retrieving data.
+   - Use a caching mechanism to reduce load on database queries.
+
+
+
 ## 👥 Author
 
 Aminul Islam Saqib <br>
