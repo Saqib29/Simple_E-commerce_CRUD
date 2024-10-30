@@ -68,6 +68,11 @@ enum UserStatus {
   INACTIVE
 }
 
+type SalesPerCategoryDto {
+  category: ProductCategory!
+  totalSales: Float!
+}
+
 type TotalSalesPerCategoryDto {
   category: String!
   totalSales: Float!
@@ -89,9 +94,8 @@ type Query {
   getUserById(id: Int!): User!
   getUserByEmail(email: String!): User!
   allProducts(pagination: PaginationDto!): [Product!]!
-  product(id: ID!): Product!
-  userOrders: [Order!]!
   totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
+  userOrders: [Order!]!
   topUsers: [TopUserDto!]!
 }
 

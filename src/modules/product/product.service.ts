@@ -6,6 +6,9 @@ import { Pagination, PaginationDto } from 'src/utils/common/pagination';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DeleteProductDto } from './dto/delete-product.dto';
+import { OrderItem } from 'src/utils/common/entities/order-item.entity';
+import { SalesPerCategoryDto } from './dto/sales-per-category.dto';
+import { ProductCategory } from 'src/utils/types/enums';
 
 @Injectable()
 export class ProductService {
@@ -13,6 +16,8 @@ export class ProductService {
     constructor(
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
+        @InjectRepository(OrderItem)
+        private readonly orderItemRepository: Repository<OrderItem>,
     ) {}
 
     async findAllProducts(pagination: PaginationDto): Promise<Product[]> {
@@ -30,9 +35,24 @@ export class ProductService {
         
     }
 
-    async findOne(id: string): Promise<Product> {
-        // return this.productRepository.findOne({ where: { id } });
-        return new Product()
+    async getTotalSalesPerCategory(): Promise<SalesPerCategoryDto[]> {
+        try {
+            const result = await this.orderItemRepository
+                .createQueryBuilder('orderItem')
+                .select('SUM(orderItem.unit_price * orderItem.quantity)', 'totalSales')
+                .addSelect('product.category', 'category')
+                .innerJoin('orderItem.product', 'product')
+                .groupBy('product.category')
+                .getRawMany();
+
+            return result.map(item => ({
+                category: item.category as ProductCategory,
+                totalSales: parseFloat(item.totalSales),
+            }));
+        } catch (error) {
+            this.logger.error(`Failed to get total sales per category: ${error.message}`);
+            throw new InternalServerErrorException('Could not retrieve total sales per category');
+        }
     }
 
     async createProduct(createProductDto: CreateProductDto): Promise<Product>{
