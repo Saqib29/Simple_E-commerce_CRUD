@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
 import { PlaceOrderDto } from './dto/place-order.dto';
 import { UserService } from '../user/user.service';
 import { OrderStatus } from 'src/utils/types/enums';
+import { CancelOrderDto } from './dto/cancel-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -52,6 +53,30 @@ export class OrderService {
         } catch (error) {
             this.logger.error(`Failed to place order: ${error.message}`);
             throw new InternalServerErrorException('Could not retrieve top-ranking users');
+        }
+    }
+
+    async cancelOrder(user: ICurrentUser, cancelOrderDto: CancelOrderDto): Promise<Order> {
+        
+        try {
+            const { orderId } = cancelOrderDto;
+            const order = await this.orderRepository.findOne({
+                where: { id: orderId, user: { id: parseInt(user.userId) } },
+                relations: ['orderItems'],
+            });
+            if (!order) throw new NotFoundException(`Order not found for this user`);
+
+            if (order.status === OrderStatus.CANCELLED) {
+                throw new BadRequestException('Order is already cancelled');
+            }
+
+            order.status = OrderStatus.CANCELLED;
+            await this.orderRepository.save(order);
+            
+            return order;
+        } catch (error) {
+            this.logger.error(`Failed to cancel order: ${error.message}`);
+            throw new InternalServerErrorException('Can not cancel order now');
         }
     }
 

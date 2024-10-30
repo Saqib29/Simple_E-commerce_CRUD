@@ -104,6 +104,7 @@ type Mutation {
   updateProduct(updateProductDto: UpdateProductDto!): Product!
   deleteProduct(deleteProductDto: DeleteProductDto!): Boolean!
   placeOrder(placeOrderDto: PlaceOrderDto!): Order!
+  cancelOrder(cancelOrderDto: CancelOrderDto!): Order!
   signin(signInDto: SignInDto!): AuthResponseDto!
   signup(signUpDto: SignUpDto!): AuthResponseDto!
 }
@@ -138,6 +139,10 @@ input PlaceOrderDto {
 input OrderItemInput {
   productId: Float!
   quantity: Float!
+}
+
+input CancelOrderDto {
+  orderId: Float!
 }
 
 input SignInDto {

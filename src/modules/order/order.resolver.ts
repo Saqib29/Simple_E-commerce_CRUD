@@ -7,6 +7,7 @@ import { CurrentUser } from 'src/utils/decorator/current-user.decorator';
 import { UserRankingDto } from './dto/user-ranking.dto';
 import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
 import { PlaceOrderDto } from './dto/place-order.dto';
+import { CancelOrderDto } from './dto/cancel-order.dto';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -21,7 +22,14 @@ export class OrderResolver {
         return this.orderService.placeOrder(user.userId, placeOrderDto);
     }
 
-    
+    @Mutation(() => Order)
+    @UseGuards(GqlAuthGuard)
+    async cancelOrder(
+        @CurrentUser() user: ICurrentUser,
+        @Args('cancelOrderDto') cancelOrderDto: CancelOrderDto,
+    ): Promise<Order> {
+        return this.orderService.cancelOrder(user, cancelOrderDto);
+    }
 
     @Query(() => [UserRankingDto])
     async getTopRankingUsers(
