@@ -73,17 +73,6 @@ type SalesPerCategoryDto {
   totalSales: Float!
 }
 
-type TotalSalesPerCategoryDto {
-  category: String!
-  totalSales: Float!
-}
-
-type TopUserDto {
-  userId: String!
-  userEmail: String!
-  orderCount: Int!
-}
-
 type AuthResponseDto {
   access_token: String!
 }
@@ -94,9 +83,8 @@ type Query {
   getUserById(id: Int!): User!
   getUserByEmail(email: String!): User!
   allProducts(pagination: PaginationDto!): [Product!]!
-  totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
+  totalSalesPerCategory: [SalesPerCategoryDto!]!
   userOrders: [Order!]!
-  topUsers: [TopUserDto!]!
 }
 
 input PaginationDto {

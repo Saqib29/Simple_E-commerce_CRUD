@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Order } from './entities/order.entity';
 import { OrderService } from './order.service';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
@@ -6,6 +6,7 @@ import { UseGuards } from '@nestjs/common';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
 import { CurrentUser } from 'src/utils/decorator/current-user.decorator';
 import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
+import { UserRankingDto } from './dto/user-ranking.dto';
 
 @Resolver(() => Order)
 export class OrderResolver {
@@ -33,15 +34,10 @@ export class OrderResolver {
         return this.orderService.findByUser(user.userId);
     }
 
-    @Query(() => [TotalSalesPerCategoryDto])
-    @UseGuards(GqlAuthGuard)
-    async totalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
-        return this.orderService.getTotalSalesPerCategory();
-    }
 
-    @Query(() => [TopUserDto])
-    @UseGuards(GqlAuthGuard)
-    async topUsers(): Promise<TopUserDto[]> {
-        return this.orderService.getTopUsers();
+    async getTopRankingUsers(
+        @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number
+    ): Promise<UserRankingDto[]> {
+        return this.orderService.getTopRankingUsers(limit);
     }
 }

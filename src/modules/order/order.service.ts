@@ -1,12 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
 import { Product } from 'src/modules/product/entities/product.entity';
+import { UserRankingDto } from './dto/user-ranking.dto';
 
 @Injectable()
 export class OrderService {
+    private readonly logger = new Logger(OrderService.name);
     constructor(
         @InjectRepository(Order)
         private orderRepository: Repository<Order>,
@@ -59,16 +61,25 @@ export class OrderService {
           .getRawMany();
     }
 
-    async getTopUsers(): Promise<TopUserDto[]> {
-        return this.orderRepository
-          .createQueryBuilder('order')
-          .leftJoinAndSelect('order.user', 'user')
-          .select('user.id', 'userId')
-          .addSelect('user.email', 'userEmail')
-          .addSelect('COUNT(order.id)', 'orderCount')
-          .groupBy('user.id')
-          .orderBy('COUNT(order.id)', 'DESC')
-          .limit(10)
-          .getRawMany();
+    async getTopRankingUsers(limit: number = 10): Promise<UserRankingDto[]> {
+        try {
+            const result = await this.orderRepository
+                .createQueryBuilder('order')
+                .select('user.id', 'userId')
+                .addSelect('COUNT(order.id)', 'orderCount')
+                .innerJoinAndSelect('order.user', 'user')
+                .groupBy('user.id')
+                .orderBy('orderCount', 'DESC')
+                .limit(limit)
+                .getRawMany();
+            
+            return result.map(item => ({
+                user:  item.user,
+                orderCount: parseInt(item.orderCount, 10),
+            }));
+        } catch (error) {
+            this.logger.error(`Failed to retrieve top-ranking users: ${error.message}`);
+            throw new InternalServerErrorException('Could not retrieve top-ranking users');
+        }
     }
 }
