@@ -7,6 +7,7 @@ import { Pagination, PaginationDto } from 'src/utils/common/pagination';
 import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { jwt_config } from 'src/app-config-module/config';
+import { UserStatus } from 'src/utils/types/enums';
 
 @Injectable()
 export class UserService {
@@ -91,4 +92,25 @@ export class UserService {
             throw new InternalServerErrorException('Could not update user');
         }
     }
+
+    async deactivateUser(id: number): Promise<boolean> {
+        try {
+            const user = await this.userRepository.findOne({where: { id }});
+
+            if (!user) throw new NotFoundException('User not found');
+            if (user.status === UserStatus.INACTIVE) throw new BadRequestException('User is already deactivated');
+
+            user.status = UserStatus.INACTIVE;
+            await this.userRepository.save(user);
+            return true;
+
+        } catch (error) {
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                this.logger.warn(`Failed to inactive user: ${error.message}`);
+                throw error;
+            }
+            this.logger.error(`Could not deactivate user ${id}: ${error.message}`);
+            throw new InternalServerErrorException('Could not deactivate user');
+        }
+    } 
 }

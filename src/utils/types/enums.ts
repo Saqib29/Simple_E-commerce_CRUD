@@ -18,6 +18,12 @@ export enum OrderStatus {
   CANCELLED = 'CANCELLED'
 }
 
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE'
+}
+
 registerEnumType(ProductCategory, { name: 'ProductCategory' });
 registerEnumType(OrderStatus, { name: 'OrderStatus' });
+registerEnumType(UserStatus, { name: 'UserStatus' });
 registerEnumType(Role, { name: 'Role' });

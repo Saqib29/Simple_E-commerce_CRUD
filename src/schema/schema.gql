@@ -54,12 +54,18 @@ type User {
   name: String!
   password: String!
   role: Role!
+  status: UserStatus!
   orders: [Order!]
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type TotalSalesPerCategoryDto {
@@ -96,6 +102,7 @@ input PaginationDto {
 
 type Mutation {
   updateUser(updateUserDto: UpdateUserDto!): User!
+  deactivateUser(id: Int!): Boolean!
   createProduct(name: String!, category: String!, price: Float!): Product!
   updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
   deleteProduct(id: ID!): Boolean!

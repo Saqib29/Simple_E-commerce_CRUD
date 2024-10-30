@@ -35,4 +35,10 @@ export class UserResolver {
     ): Promise<User> {
         return this.userService.updateUser(currentUser, updateUserDto);
     }
+
+    @Mutation(() => Boolean)
+    @UseGuards(GqlAuthGuard)
+    async deactivateUser(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
+        return this.userService.deactivateUser(id);
+    }
 }
