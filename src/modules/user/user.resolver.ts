@@ -1,4 +1,4 @@
-import { Args, ID, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { PaginationDto } from 'src/utils/common/pagination';
@@ -17,6 +17,7 @@ export class UserResolver {
         return this.userService.findById(id);
     }
 
+    @Query(() => User, { name: 'getUserByEmail' })
     async getUserByEmail(@Args('email', { type: () => String }) email: string): Promise<User | null> {
         return this.userService.findByEmail(email);
     }

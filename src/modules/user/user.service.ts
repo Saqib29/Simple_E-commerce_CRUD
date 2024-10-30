@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -54,8 +54,13 @@ export class UserService {
         }
     }
 
-    async create(email: string, password: string): Promise<User> {
-        const user = this.userRepository.create({ email, password });
-        return this.userRepository.save(user);
+    async createUser(name: string, email: string, password: string): Promise<User> {
+        try {
+            const user = this.userRepository.create({ name, email, password });
+            return this.userRepository.save(user);
+        } catch (error) {
+            this.logger.error(`Error creating user: ${error.message}`);
+            throw new InternalServerErrorException('Failed to SignUp user');
+        }
     }
 }

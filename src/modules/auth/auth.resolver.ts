@@ -1,31 +1,36 @@
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { AuthPayload } from 'src/utils/types/auth-payload';
+import { AuthResponseDto } from 'src/modules/auth/dto/auth-payload.dto';
 import { Response } from 'express';
+import { SignUpDto } from './dto/signup.dto';
+import { SignInDto } from './dto/signin.dto';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 
 @Resolver()
 export class AuthResolver {
     constructor(private authService: AuthService){}
 
-    @Mutation(() => AuthPayload)
+    @Mutation(() => AuthResponseDto)
     async signin(
-        @Args('email') email: string,
-        @Args('password') password: string,
+        @Args('signInDto') signInDto: SignInDto,
         @Context() context: { res: Response }
-    ): Promise<AuthPayload> {
-        const user = await this.authService.validateUser(email, password);
-        if (!user) {
-            throw new Error('Invalid credentials')
+    ): Promise<AuthResponseDto> {
+        try {
+            return await this.authService.signIn(signInDto, context.res);
+        } catch (error) {
+            throw new BadRequestException(error.message || 'Sign-in failed');
         }
-        return this.authService.signIn(user, context.res);
     }
 
-    @Mutation(() => AuthPayload)
+    @Mutation(() => AuthResponseDto)
     async signup(
-        @Args('email') email: string,
-        @Args('password') password: string,
+        @Args('signUpDto') signUpDto: SignUpDto,
         @Context() context: { res: Response } 
-    ): Promise<AuthPayload> {
-        return this.authService.signUp(email, password, context.res);
+    ): Promise<AuthResponseDto> {
+        try {
+            return await this.authService.signUp(signUpDto, context.res);
+        } catch (error) {
+            throw new InternalServerErrorException(error.message || 'Sign-up failed');
+        }
     }
 }

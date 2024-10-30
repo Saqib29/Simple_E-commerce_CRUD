@@ -73,7 +73,7 @@ type TopUserDto {
   orderCount: Int!
 }
 
-type AuthPayload {
+type AuthResponseDto {
   access_token: String!
 }
 
@@ -81,6 +81,7 @@ type Query {
   hello: String!
   allUsersWithOrders(pagination: PaginationDto!): [User!]!
   getUserById(id: Int!): User!
+  getUserByEmail(email: String!): User!
   allProducts(pagination: PaginationDto!): [Product!]!
   product(id: ID!): Product!
   userOrders: [Order!]!
@@ -99,6 +100,17 @@ type Mutation {
   deleteProduct(id: ID!): Boolean!
   createOrder(productId: ID!, quantity: Float!): Order!
   cancelOrder(id: ID!): Order!
-  signin(email: String!, password: String!): AuthPayload!
-  signup(email: String!, password: String!): AuthPayload!
+  signin(signInDto: SignInDto!): AuthResponseDto!
+  signup(signUpDto: SignUpDto!): AuthResponseDto!
+}
+
+input SignInDto {
+  email: String!
+  password: String!
+}
+
+input SignUpDto {
+  email: String!
+  name: String!
+  password: String!
 }
