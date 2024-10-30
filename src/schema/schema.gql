@@ -3,24 +3,45 @@
 # ------------------------------------------------------
 
 type Product {
-  id: ID!
   name: String!
-  category: String!
   price: Float!
+  category: ProductCategory!
+  orderItems: [OrderItem!]
+}
+
+enum ProductCategory {
+  ELECTRONICS
+  CLOTHING
+  BOOKS
+  HOME
+  SPORTS
+}
+
+type OrderItem {
+  order: Order!
+  product: Product!
+  quantity: Float!
+  unit_price: Float!
 }
 
 type Order {
-  id: ID!
   user: User!
-  product: Product!
-  quantity: Float!
-  status: String!
+  total_amount: Float!
+  status: Boolean!
+  orderItems: [OrderItem!]!
 }
 
 type User {
-  id: ID!
   email: String!
+  name: String!
+  password: String!
+  role: Role!
   orders: [Order!]
+}
+
+enum Role {
+  ADMIN
+  USER
 }
 
 type TotalSalesPerCategoryDto {

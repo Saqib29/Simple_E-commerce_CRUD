@@ -1,5 +1,5 @@
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Product } from './product.entity';
+import { Product } from './entities/product.entity';
 import { ProductService } from './product.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';

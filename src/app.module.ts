@@ -11,7 +11,6 @@ import { AppResolver } from './app.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
-import { SeederModule } from './seeder/seeder.module';
 import { db_config } from './app-config-module/config';
 
 @Module({
@@ -41,7 +40,6 @@ import { db_config } from './app-config-module/config';
     ProductModule, 
     OrderModule, 
     AuthModule,
-    SeederModule
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

@@ -1,5 +1,5 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Order } from './order.entity';
+import { Order } from './entities/order.entity';
 import { OrderService } from './order.service';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';

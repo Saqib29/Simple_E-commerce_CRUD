@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './order.entity';
+import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { ORDER_STATUS } from 'src/utils/common/constant';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
-import { Product } from 'src/modules/product/product.entity';
+import { Product } from 'src/modules/product/entities/product.entity';
 
 @Injectable()
 export class OrderService {
@@ -16,36 +16,38 @@ export class OrderService {
     ) {}
 
     async create(userId: string, productId: string, quantity: number): Promise<Order> {
-        const product = await this.productRepository.findOne({ where: { id: productId } })
+        const product = await this.productRepository.findOne({ where: { id: parseInt(productId) } })
         if (!product) throw new NotFoundException(`Product id ${productId} not found`);
 
-        const order = this.orderRepository.create({
-            user: { id: userId },
-            product: { id: productId },
-            quantity,
-            status: ORDER_STATUS.PENDING,
-        });
-        await this.orderRepository.save(order);
-
-        return this.orderRepository.findOne({
-            where: { id: order.id },
-            relations: ['product', 'user']
-        })
+        // const order = this.orderRepository.create({
+        //     user: { id: parseInt(userId) },
+        //     product: { id: productId },
+        //     quantity,
+        //     status: ORDER_STATUS.PENDING,
+        // });
+        // await this.orderRepository.save(order);
+        return new Order();
+        // return this.orderRepository.findOne({
+        //     where: { id: order.id },
+        //     relations: ['product', 'user']
+        // })
     }
 
     async cancel(id: string): Promise<Order> {
-        await this.orderRepository.update(id, { status: ORDER_STATUS.CANCELLED });
-        return this.orderRepository.findOne({ 
-            where: { id },
-            relations: ['product', 'user']
-        });
+        // await this.orderRepository.update(id, { status: ORDER_STATUS.CANCELLED });
+        // return this.orderRepository.findOne({ 
+        //     where: { id },
+        //     relations: ['product', 'user']
+        // });
+        return new Order();
     }
 
     async findByUser(userId: string): Promise<Order[]> {
-        return this.orderRepository.find({
-          where: { user: { id: userId } },
-          relations: ['product', 'user'],
-        });
+        // return this.orderRepository.find({
+        //   where: { user: { id: userId } },
+        //   relations: ['product', 'user'],
+        // });
+        return [new Order()]
     }
 
     async getTotalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
