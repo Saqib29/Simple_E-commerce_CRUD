@@ -18,7 +18,7 @@ export class Pagination {
 }
 
 @InputType()
-export class PaginationInput {
+export class PaginationDto {
   @Field(() => Int, { defaultValue: 1 })
   @IsPositive()
   @IsOptional()

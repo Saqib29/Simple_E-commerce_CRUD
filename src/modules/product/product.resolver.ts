@@ -3,17 +3,15 @@ import { Product } from './entities/product.entity';
 import { ProductService } from './product.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
+import { PaginationDto } from 'src/utils/common/pagination';
 
 @Resolver(() => Product)
 export class ProductResolver {
     constructor(private productService: ProductService) {}
 
     @Query(() => [Product])
-    async products(
-        @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
-        @Args('limit', { type: () => Int, defaultValue: 10 }) limit: number,  
-    ): Promise<Product[]> {
-        return this.productService.findAll(page, limit);
+    async allProducts(@Args('pagination') pagination: PaginationDto): Promise<Product[]> {
+        return this.productService.findAllProducts(pagination);
     }
 
     @Query(() => Product)

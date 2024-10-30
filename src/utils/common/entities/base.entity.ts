@@ -1,6 +1,7 @@
-import { Field, ID } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 
+@ObjectType()
 export abstract class BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn('increment')

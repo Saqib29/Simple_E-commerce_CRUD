@@ -1,19 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { paginate } from 'src/utils/common/pagination';
+import { Pagination, PaginationDto } from 'src/utils/common/pagination';
 
 @Injectable()
 export class ProductService {
+    private readonly logger = new Logger(ProductService.name);
     constructor(
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
     ) {}
 
-    async findAll(page: number, limit: number): Promise<Product[]> {
-        const queryBuilder = this.productRepository.createQueryBuilder('product');
-        return paginate(queryBuilder, page, limit);
+    async findAllProducts(pagination: PaginationDto): Promise<Product[]> {
+        const { skip, limit } = Pagination.paginate(pagination.page, pagination.limit);
+
+        try {
+            return this.productRepository.find({
+                skip,
+                take: limit,
+                order: { id: 'ASC' }
+            });
+        } catch (error) {
+            this.logger.error(`Error finding all products: ${error.message}`);
+            throw new BadRequestException('Could not retrieve products');
+        }
+        
     }
 
     async findOne(id: string): Promise<Product> {
