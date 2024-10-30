@@ -6,6 +6,7 @@ import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 import { PaginationDto } from 'src/utils/common/pagination';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { DeleteProductDto } from './dto/delete-product.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -39,7 +40,9 @@ export class ProductResolver {
 
     @Mutation(() => Boolean)
     @UseGuards(GqlAuthGuard)
-    async deleteProduct(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
-        return this.productService.remove(id);
+    async deleteProduct(
+      @Args('deleteProductDto') deleteProductDto: DeleteProductDto,
+    ): Promise<boolean> {
+        return this.productService.deleteProduct(deleteProductDto);
     }
 }

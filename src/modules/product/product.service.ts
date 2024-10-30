@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Pagination, PaginationDto } from 'src/utils/common/pagination';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { DeleteProductDto } from './dto/delete-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -56,8 +57,19 @@ export class ProductService {
         }
     }
 
-    async remove(id: string): Promise<boolean> {
-        const result = await this.productRepository.delete(id);
-        return result.affected > 0;
+    async deleteProduct(deleteProductDto: DeleteProductDto): Promise<boolean> {
+        try {
+            const product = await this.productRepository.findOne({ 
+                where: { id: deleteProductDto.id } 
+            });
+            if (!product) {
+                throw new NotFoundException(`Product not found`);
+            }
+            await this.productRepository.remove(product);
+            return true;
+        } catch (error) {
+            this.logger.error(`Failed to delete product ${deleteProductDto.id}: ${error.message}`);
+            throw new InternalServerErrorException('Could not delete product');
+        }
     }
 }
