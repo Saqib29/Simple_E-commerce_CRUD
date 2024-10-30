@@ -18,8 +18,7 @@ export class ProductService {
         try {
             return this.productRepository.find({
                 skip,
-                take: limit,
-                order: { id: 'ASC' }
+                take: limit
             });
         } catch (error) {
             this.logger.error(`Error finding all products: ${error.message}`);

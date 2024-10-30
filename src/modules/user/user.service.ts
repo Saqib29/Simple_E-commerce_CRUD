@@ -1,25 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { Pagination, PaginationDto } from 'src/utils/common/pagination';
 
 @Injectable()
 export class UserService {
+    private readonly logger = new Logger(UserService.name);
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
     ){}
 
-    async findAll(): Promise<User[]> {
-        return this.userRepository.find();
+    async findAllUsers(pagination: PaginationDto): Promise<User[]> {
+        const { skip, limit } = Pagination.paginate(pagination.page, pagination.limit);
+
+        try {
+            return this.userRepository.find({ 
+                skip, take: limit,
+                relations: ['orders']
+            })
+        } catch (error) {
+            this.logger.error(`Error finding all users: ${error.message}`);
+            throw new BadRequestException('Could not retrieve users');
+        }
     }
 
-    async findOne(id: string): Promise<User> {
-        // return this.userRepository.findOne({ where: { id } });
-        return new User();
+    async findById(id: number): Promise<User> {
+        try {
+            const user = await this.userRepository.findOne({
+                where: { id },
+                relations: ['orders'],
+            });
+            if (!user) throw new NotFoundException(`User not found`);
+
+            return user;
+        } catch (error) {
+            this.logger.error(`Error retrieving user{id:${id}}: ${error.message}`);
+            throw new BadRequestException('Could not retrieve user');
+        }
     }
 
     async findByEmail(email: string): Promise<User> {
-        return this.userRepository.findOne({ where: { email } });
+        try {
+            const user = await this.userRepository.findOne({ 
+                where: { email },
+                relations: ['orders'],
+            });
+            if (!user) throw new NotFoundException(`User not found`);
+            return user;
+        } catch (error) {
+            this.logger.error(`Error retrieving user{email:${email}}: ${error.message}`);
+            throw new BadRequestException('Could not retrieve user');
+        }
     }
 
     async create(email: string, password: string): Promise<User> {

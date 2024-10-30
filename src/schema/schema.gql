@@ -79,8 +79,8 @@ type AuthPayload {
 
 type Query {
   hello: String!
-  users: [User!]!
-  user(id: ID!): User!
+  allUsersWithOrders(pagination: PaginationDto!): [User!]!
+  getUserById(id: Int!): User!
   allProducts(pagination: PaginationDto!): [Product!]!
   product(id: ID!): Product!
   userOrders: [Order!]!
