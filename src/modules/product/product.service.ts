@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { Pagination, PaginationDto } from 'src/utils/common/pagination';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -32,10 +33,14 @@ export class ProductService {
         return new Product()
     }
 
-    async create(name: string, category: string, price: number): Promise<Product> {
-        // const product = this.productRepository.create({ name, category, price });
-        // return this.productRepository.save(product);
-        return new Product();
+    async createProduct(createProductDto: CreateProductDto): Promise<Product>{
+        try {
+            const newProduct = this.productRepository.create(createProductDto);
+            return await this.productRepository.save(newProduct);
+        } catch (error) {
+            this.logger.error(`Failed to create product: ${error.message}`);
+            throw new InternalServerErrorException('Could not create product');
+        }
     }
 
     async update(id: string, name: string, category: string, price: number): Promise<Product> {

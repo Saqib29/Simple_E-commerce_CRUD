@@ -4,6 +4,7 @@ import { ProductService } from './product.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 import { PaginationDto } from 'src/utils/common/pagination';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -22,11 +23,9 @@ export class ProductResolver {
     @Mutation(() => Product)
     @UseGuards(GqlAuthGuard)
     async createProduct(
-      @Args('name') name: string,
-      @Args('category') category: string,
-      @Args('price') price: number,
+      @Args('createProductDto') createProductDto: CreateProductDto
     ): Promise<Product> {
-      return this.productService.create(name, category, price);
+      return this.productService.createProduct(createProductDto);
     }
 
     @Mutation(() => Product)
