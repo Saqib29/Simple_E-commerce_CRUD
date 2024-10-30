@@ -38,8 +38,13 @@ type Order {
   created_at: DateTime!
   user: User!
   total_amount: Float!
-  status: Boolean!
+  status: OrderStatus!
   orderItems: [OrderItem!]!
+}
+
+enum OrderStatus {
+  PENDING
+  CANCELLED
 }
 
 type User {
@@ -61,7 +66,9 @@ type TotalSalesPerCategoryDto {
   category: String!
   totalSales: Float!
 }
-src/utils/common/pagination.ts
+
+type TopUserDto {
+  userId: String!
   userEmail: String!
   orderCount: Int!
 }

@@ -4,7 +4,7 @@ import { UserService } from 'src/modules/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { AuthPayload } from 'src/utils/types/auth-payload';
 import { Response } from 'express';
-import { JWT_OPTIONS } from 'src/utils/common/jwt.option';
+import { JWT_OPTIONS } from 'src/utils/common/jwt-option';
 import { jwt_config } from 'src/app-config-module/config';
 
 @Injectable()

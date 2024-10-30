@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
-import { ORDER_STATUS } from 'src/utils/common/constant';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
 import { Product } from 'src/modules/product/entities/product.entity';
 

@@ -13,7 +13,11 @@ export enum Role {
   USER = 'user',
 }
 
-
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED'
+}
 
 registerEnumType(ProductCategory, { name: 'ProductCategory' });
+registerEnumType(OrderStatus, { name: 'OrderStatus' });
 registerEnumType(Role, { name: 'Role' });
