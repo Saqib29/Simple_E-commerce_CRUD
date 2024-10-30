@@ -104,7 +104,7 @@ type Mutation {
   updateUser(updateUserDto: UpdateUserDto!): User!
   deactivateUser(id: Int!): Boolean!
   createProduct(createProductDto: CreateProductDto!): Product!
-  updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
+  updateProduct(updateProductDto: UpdateProductDto!): Product!
   deleteProduct(id: ID!): Boolean!
   createOrder(productId: ID!, quantity: Float!): Order!
   cancelOrder(id: ID!): Order!
@@ -121,6 +121,13 @@ input CreateProductDto {
   name: String!
   price: Float!
   category: ProductCategory!
+}
+
+input UpdateProductDto {
+  id: Int!
+  name: String
+  price: Float
+  category: ProductCategory
 }
 
 input SignInDto {

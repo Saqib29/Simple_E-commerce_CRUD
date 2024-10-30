@@ -5,6 +5,7 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from 'src/utils/jwt/gql-auth.guard';
 import { PaginationDto } from 'src/utils/common/pagination';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -31,12 +32,9 @@ export class ProductResolver {
     @Mutation(() => Product)
     @UseGuards(GqlAuthGuard)
     async updateProduct(
-    @Args('id', { type: () => ID }) id: string,
-    @Args('name') name: string,
-    @Args('category') category: string,
-    @Args('price') price: number,
+      @Args('updateProductDto') updateProductDto: UpdateProductDto,
     ): Promise<Product> {
-    return this.productService.update(id, name, category, price);
+    return this.productService.updateProduct(updateProductDto);
     }
 
     @Mutation(() => Boolean)
