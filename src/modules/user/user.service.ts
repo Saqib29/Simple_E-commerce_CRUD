@@ -2,7 +2,11 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { Pagination, PaginationDto } from 'src/utils/common/pagination';
+import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { jwt_config } from 'src/app-config-module/config';
 
 @Injectable()
 export class UserService {
@@ -61,6 +65,30 @@ export class UserService {
         } catch (error) {
             this.logger.error(`Error creating user: ${error.message}`);
             throw new InternalServerErrorException('Failed to SignUp user');
+        }
+    }
+
+    async updateUser(
+        currentUser: ICurrentUser,
+        updateUserDto: UpdateUserDto
+    ): Promise<User> {
+        try {
+            const user = await this.userRepository.findOne({ 
+                where: { id: parseInt(currentUser.userId) } 
+            });
+            if (!user) throw new NotFoundException(`User not found`);
+
+            if (updateUserDto.name) {
+                user.name = updateUserDto.name;
+            }
+            if (updateUserDto.password) {
+                user.password = await bcrypt.hash(updateUserDto.password, parseInt(jwt_config.salt));
+            }
+
+            return await this.userRepository.save(user);
+        } catch (error) {
+            this.logger.error(`Could not update user: ${error.message}`);
+            throw new InternalServerErrorException('Could not update user');
         }
     }
 }

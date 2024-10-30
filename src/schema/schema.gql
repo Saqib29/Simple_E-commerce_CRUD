@@ -95,6 +95,7 @@ input PaginationDto {
 }
 
 type Mutation {
+  updateUser(updateUserDto: UpdateUserDto!): User!
   createProduct(name: String!, category: String!, price: Float!): Product!
   updateProduct(id: ID!, name: String!, category: String!, price: Float!): Product!
   deleteProduct(id: ID!): Boolean!
@@ -102,6 +103,11 @@ type Mutation {
   cancelOrder(id: ID!): Order!
   signin(signInDto: SignInDto!): AuthResponseDto!
   signup(signUpDto: SignUpDto!): AuthResponseDto!
+}
+
+input UpdateUserDto {
+  name: String
+  password: String
 }
 
 input SignInDto {
