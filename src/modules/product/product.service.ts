@@ -7,7 +7,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DeleteProductDto } from './dto/delete-product.dto';
 import { OrderItem } from 'src/utils/common/entities/order-item.entity';
-import { SalesPerCategoryDto } from './dto/sales-per-category.dto';
+import { TotalSalesPerCategoryDto } from './dto/sales-per-category.dto';
 import { ProductCategory } from 'src/utils/types/enums';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class ProductService {
         
     }
 
-    async getTotalSalesPerCategory(): Promise<SalesPerCategoryDto[]> {
+    async getTotalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
         try {
             const result = await this.orderItemRepository
                 .createQueryBuilder('orderItem')

@@ -7,7 +7,7 @@ import { PaginationDto } from 'src/utils/common/pagination';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DeleteProductDto } from './dto/delete-product.dto';
-import { SalesPerCategoryDto } from './dto/sales-per-category.dto';
+import { TotalSalesPerCategoryDto } from './dto/sales-per-category.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -18,8 +18,8 @@ export class ProductResolver {
         return this.productService.findAllProducts(pagination);
     }
 
-    @Query(() => [SalesPerCategoryDto])
-    async totalSalesPerCategory(): Promise<SalesPerCategoryDto[]> {
+    @Query(() => [TotalSalesPerCategoryDto])
+    async totalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
         return this.productService.getTotalSalesPerCategory();
     }
 

@@ -68,9 +68,14 @@ enum UserStatus {
   INACTIVE
 }
 
-type SalesPerCategoryDto {
+type TotalSalesPerCategoryDto {
   category: ProductCategory!
   totalSales: Float!
+}
+
+type UserRankingDto {
+  user: User!
+  orderCount: Int!
 }
 
 type AuthResponseDto {
@@ -83,8 +88,8 @@ type Query {
   getUserById(id: Int!): User!
   getUserByEmail(email: String!): User!
   allProducts(pagination: PaginationDto!): [Product!]!
-  totalSalesPerCategory: [SalesPerCategoryDto!]!
-  userOrders: [Order!]!
+  totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
+  getTopRankingUsers(limit: Int! = 10): [UserRankingDto!]!
 }
 
 input PaginationDto {
@@ -98,8 +103,7 @@ type Mutation {
   createProduct(createProductDto: CreateProductDto!): Product!
   updateProduct(updateProductDto: UpdateProductDto!): Product!
   deleteProduct(deleteProductDto: DeleteProductDto!): Boolean!
-  createOrder(productId: ID!, quantity: Float!): Order!
-  cancelOrder(id: ID!): Order!
+  placeOrder(placeOrderDto: PlaceOrderDto!): Order!
   signin(signInDto: SignInDto!): AuthResponseDto!
   signup(signUpDto: SignUpDto!): AuthResponseDto!
 }
@@ -124,6 +128,16 @@ input UpdateProductDto {
 
 input DeleteProductDto {
   id: Float!
+}
+
+input PlaceOrderDto {
+  items: [OrderItemInput!]!
+  totalAmount: Float!
+}
+
+input OrderItemInput {
+  productId: Float!
+  quantity: Float!
 }
 
 input SignInDto {

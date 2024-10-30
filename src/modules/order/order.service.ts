@@ -2,9 +2,12 @@ import { Injectable, InternalServerErrorException, Logger, NotFoundException } f
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
-import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
 import { Product } from 'src/modules/product/entities/product.entity';
 import { UserRankingDto } from './dto/user-ranking.dto';
+import { ICurrentUser } from 'src/utils/interface/currentUser.interface';
+import { PlaceOrderDto } from './dto/place-order.dto';
+import { UserService } from '../user/user.service';
+import { OrderStatus } from 'src/utils/types/enums';
 
 @Injectable()
 export class OrderService {
@@ -14,51 +17,42 @@ export class OrderService {
         private orderRepository: Repository<Order>,
         @InjectRepository(Product)
         private productRepository: Repository<Product>,
+        private userService: UserService,
     ) {}
 
-    async create(userId: string, productId: string, quantity: number): Promise<Order> {
-        const product = await this.productRepository.findOne({ where: { id: parseInt(productId) } })
-        if (!product) throw new NotFoundException(`Product id ${productId} not found`);
+    async placeOrder(userId: string, placeOrderDto: PlaceOrderDto): Promise<Order> {
+        const { items, totalAmount } = placeOrderDto;
 
-        // const order = this.orderRepository.create({
-        //     user: { id: parseInt(userId) },
-        //     product: { id: productId },
-        //     quantity,
-        //     status: ORDER_STATUS.PENDING,
-        // });
-        // await this.orderRepository.save(order);
-        return new Order();
-        // return this.orderRepository.findOne({
-        //     where: { id: order.id },
-        //     relations: ['product', 'user']
-        // })
-    }
+        try {
+            const user = await this.userService.findById(parseInt(userId));
+            if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
 
-    async cancel(id: string): Promise<Order> {
-        // await this.orderRepository.update(id, { status: ORDER_STATUS.CANCELLED });
-        // return this.orderRepository.findOne({ 
-        //     where: { id },
-        //     relations: ['product', 'user']
-        // });
-        return new Order();
-    }
+            let totalAmount = 0;
+            const orderItems = await Promise.all(
+                items.map(async (item) => {
+                    const product = await this.productRepository.findOne({ 
+                        where: { id: item.productId }
+                     });
+                    if (!product) throw new NotFoundException(`Product not found`);
 
-    async findByUser(userId: string): Promise<Order[]> {
-        // return this.orderRepository.find({
-        //   where: { user: { id: userId } },
-        //   relations: ['product', 'user'],
-        // });
-        return [new Order()]
-    }
+                    const itemTotal = product.price * item.quantity;
+                    totalAmount += itemTotal;
 
-    async getTotalSalesPerCategory(): Promise<TotalSalesPerCategoryDto[]> {
-        return this.orderRepository
-          .createQueryBuilder('order')
-          .leftJoinAndSelect('order.product', 'product')
-          .select('product.category', 'category')
-          .addSelect('SUM(order.quantity * product.price)', 'totalSales')
-          .groupBy('product.category')
-          .getRawMany();
+                    return { product, quantity: item.quantity, unit_price: product.price };
+                }),
+            );
+
+            const order = this.orderRepository.create({
+                user,
+                total_amount: totalAmount,
+                status: OrderStatus.PENDING,
+                orderItems,
+            });
+            return await this.orderRepository.save(order);
+        } catch (error) {
+            this.logger.error(`Failed to place order: ${error.message}`);
+            throw new InternalServerErrorException('Could not retrieve top-ranking users');
+        }
     }
 
     async getTopRankingUsers(limit: number = 10): Promise<UserRankingDto[]> {
