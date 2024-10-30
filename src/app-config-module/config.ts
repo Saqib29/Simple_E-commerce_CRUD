@@ -3,7 +3,8 @@ export const db_config = {
     port: parseInt(process.env.POSTGRES_PORT),
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
-    dbName: process.env.POSTGRES_DATABASE
+    dbName: process.env.POSTGRES_DATABASE,
+    db_query_log: process.env.DB_QUERY_LOG
 };
 
 

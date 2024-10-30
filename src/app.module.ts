@@ -35,6 +35,7 @@ import { db_config } from './app-config-module/config';
       database: db_config.dbName,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      logging: db_config.db_query_log === 'true',
     }),
     UserModule, 
     ProductModule, 

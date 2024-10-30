@@ -47,6 +47,16 @@ export class UserService {
 
     async findByEmail(email: string): Promise<User> {
         try {
+            const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+            await queryRunner.connect();
+
+            const explainResults = await queryRunner.query(
+                `EXPLAIN ANALYZE SELECT * FROM users WHERE email = $1`, [email]
+            );
+
+            this.logger.debug(`EXPLAIN ANALYZE results for findByEmail: ${JSON.stringify(explainResults)}`);
+            await queryRunner.release();
+
             const user = await this.userRepository.findOne({ 
                 where: { email },
                 relations: ['orders'],
