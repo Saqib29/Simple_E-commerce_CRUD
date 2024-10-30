@@ -4,7 +4,7 @@ import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { ORDER_STATUS } from 'src/utils/common/constant';
 import { TopUserDto, TotalSalesPerCategoryDto } from 'src/utils/types/types';
-import { Product } from 'src/product/product.entity';
+import { Product } from 'src/modules/product/product.entity';
 
 @Injectable()
 export class OrderService {

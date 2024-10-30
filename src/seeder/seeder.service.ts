@@ -2,9 +2,9 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/user/user.entity';
-import { Product } from 'src/product/product.entity';
-import { Order } from 'src/order/order.entity';
+import { User } from 'src/modules/user/user.entity';
+import { Product } from 'src/modules/product/product.entity';
+import { Order } from 'src/modules/order/order.entity';
 import { app_config } from 'src/app-config-module/config';
 
 @Injectable()
