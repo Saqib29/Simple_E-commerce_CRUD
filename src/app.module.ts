@@ -12,6 +12,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { db_config } from './app-config-module/config';
+import { SeederModule } from './seeder/seeder.module';
+
 
 @Module({
   imports: [
@@ -35,14 +37,18 @@ import { db_config } from './app-config-module/config';
       database: db_config.dbName,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      logging: db_config.db_query_log === 'true',
+      logging: false //db_config.db_query_log === 'true',
     }),
     UserModule, 
     ProductModule, 
     OrderModule, 
     AuthModule,
+    SeederModule
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [
+    AppService,
+    AppResolver,
+  ],
 })
 export class AppModule {}
