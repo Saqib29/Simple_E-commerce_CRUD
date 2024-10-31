@@ -6,16 +6,17 @@ A robust e-commerce API built with NestJS, GraphQL, and PostgreSQL, featuring JW
 
 - **Authentication**
   - JWT-based authentication system
-  - Secure user signup and signin
   - Passport integration for JWT strategy
+  - Tokenized authentication
+  - Secure user signup and signin
   - Enable cors
-  - Tokenized authenticatioon
 
 - **Database Operations**
   - CRUD operations for products, users, and orders
   - Complex queries with table joins
-  - Pagination
+  - Add Pagination
   - TypeORM integration for database interactions
+  - Add indexing on most common searched column
   - Implement seeder to save 1000 data to each table
   - Used beach to save per 100 among total to avoid over load to db and clashes
   - During seeder created another table to keep tract wether seed or not to avoid seed each time in application running. the seeder will run on the first run of the project.
@@ -23,11 +24,6 @@ A robust e-commerce API built with NestJS, GraphQL, and PostgreSQL, featuring JW
 - **GraphQL Implementation**
   - Query and Mutation
   - Implement basic queries with pagination
-  - Code first approach
-  - Apollo server
-
-- **GraphQL Implementation**
-  - Query and Mutation
   - Code first approach
   - Apollo server
 
@@ -77,6 +73,7 @@ POSTGRES_PORT=5432
 POSTGRES_USERNAME=saqib
 POSTGRES_PASSWORD=password
 POSTGRES_DATABASE=ecommers
+DB_QUERY_LOG=false
 RUN_SEED=true
 JWT_SECRET=secret
 JWT_EXP=1h
@@ -108,34 +105,40 @@ Now visit: `localhost:8181/graphql` to apollo playground.
 
 ### Users schema
 ```schema
- users (
-  id,
-  email,
-  password,
-  orders
-);
+User {
+  id: ID!
+  created_at: DateTime!
+  email: String!
+  name: String!
+  password: String!
+  role: Role!
+  status: UserStatus!
+  orders: [Order!]
+}
 ```
 
 ### Products Table
 ```schema
-products (
-    id, 
-    name, 
-    price, 
-    category, 
-    orders
-);
+Product {
+  id: ID!
+  created_at: DateTime!
+  name: String!
+  price: Float!
+  category: ProductCategory!
+  orderItems: [OrderItem!]
+}
 ```
 
 ### Orders Table
 ```schema
-orders (
-    id,
-    user,
-    product,
-    status,
-    status
-);
+Order {
+  id: ID!
+  created_at: DateTime!
+  user: User!
+  total_amount: Float!
+  status: OrderStatus!
+  orderItems: [OrderItem!]!
+}
 ```
 
 ## 📝 API Documentation
@@ -143,34 +146,30 @@ orders (
 ### Queries
 
 ```graphql
-type Query {
+Query {
   hello: String!
-  users: [User!]!
-  user(id: ID!): User!
-  products(page: Int! = 1, limit: Int! = 10): [Product!]!
-  product(id: ID!): Product!
-  userOrders: [Order!]!
+  allUsersWithOrders(pagination: PaginationDto!): [User!]!
+  getUserById(id: Int!): User!
+  getUserByEmail(email: String!): User!
+  allProducts(pagination: PaginationDto!): [Product!]!
   totalSalesPerCategory: [TotalSalesPerCategoryDto!]!
-  topUsers: [TopUserDto!]!
+  getTopRankingUsers(limit: Int! = 10): [UserRankingDto!]!
 }
 ```
 
 ### Mutations
 
 ```graphql
-type Mutation {
-  createProduct(name: String!, category: String!, price: Float!): Product!
-  updateProduct(
-    id: ID!
-    name: String!
-    category: String!
-    price: Float!
-  ): Product!
-  deleteProduct(id: ID!): Boolean!
-  createOrder(productId: ID!, quantity: Float!): Order!
-  cancelOrder(id: ID!): Order!
-  signin(email: String!, password: String!): AuthPayload!
-  signup(email: String!, password: String!): AuthPayload!
+Mutation {
+  updateUser(updateUserDto: UpdateUserDto!): User!
+  deactivateUser(id: Int!): Boolean!
+  createProduct(createProductDto: CreateProductDto!): Product!
+  updateProduct(updateProductDto: UpdateProductDto!): Product!
+  deleteProduct(deleteProductDto: DeleteProductDto!): Boolean!
+  placeOrder(placeOrderDto: PlaceOrderDto!): Order!
+  cancelOrder(cancelOrderDto: CancelOrderDto!): Order!
+  signin(signInDto: SignInDto!): AuthResponseDto!
+  signup(signUpDto: SignUpDto!): AuthResponseDto!
 }
 
 ```
@@ -188,25 +187,24 @@ type Mutation {
 1. **Security**
    - Password hashing using bcrypt
    - JWT token validation
+   - Add guard
 
 2. **Database**
    - TypeORM entities with proper relations
    - Use of database transactions where needed
-
+   - Add Indexing column
+   - Add Analyzer to show performance
 
 ## 🌟 What should be improved
 
 0. **Access controller**
-    - Should add role base access control
-    - Add user role
+    - Should add role base access control guard
 
 1. **Error Handling**
-   - Should add proper error handler
    - Add global error handler
 
 2. **Database**
-   - Should add `indexing` to improve fast retrieving data.
-   - Use a caching mechanism to reduce load on database queries.
+   - Use a caching mechanism to reduce load on database.
 
 
 
